@@ -4,14 +4,21 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     loadComponent: () => import('./gifs/pages/dashboard/dashboard.component'),
-  },
-  {
-    path: 'trending',
-    loadComponent: () => import('./gifs/pages/trending/trending.component'),
-  },
-  {
-    path: 'search',
-    loadComponent: () => import('./gifs/pages/search/search.component'),
+    children: [
+      //rutas hijas
+      {
+        path: 'trending',
+        loadComponent: () => import('./gifs/pages/trending/trending.component'),
+      },
+      {
+        path: 'search',
+        loadComponent: () => import('./gifs/pages/search/search.component'),
+      },
+      {
+        path: '**',
+        redirectTo: 'trending',
+      },
+    ],
   },
   {
     path: '**',
