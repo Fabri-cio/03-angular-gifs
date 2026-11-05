@@ -1,14 +1,9 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-5">
-  <gif-list-item />
-  <gif-list-item />
-  <gif-list-item />
-  <gif-list-item />
-  <gif-list-item />
-  <gif-list-item />
-  <gif-list-item />
-  <gif-list-item />
-  <gif-list-item />
-  <gif-list-item />
+  <!-- puede ser item o cualquier otro nombre gifs es el input por donde recibimos la lista de gifs() -->
+  @for (item of gifs(); track item) {
+    <!-- enviamos a imageUrl los item -->
+    <gif-list-item [imageUrl]="item" />
+  }
 </div>
 
 <!-- 🔖 Material adjunto: https://flowbite.com/docs/components/... -->
