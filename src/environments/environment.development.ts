@@ -6,6 +6,8 @@ export const environment = {
 
   //   API-keys
   // urls
+  giphyApikey: 'AuyUhALIJ82K6R7IGWu8VbMYmChxGKfi',
+  giphyUrl: 'https://api.giphy.com/v1',
 
   // comando para generar environments:
   // ng g environments
