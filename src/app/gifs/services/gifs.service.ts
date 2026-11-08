@@ -37,6 +37,24 @@ export class GifService {
         console.log(gifs);
       });
   }
+
+  // metodo que recibe un parametro query de tipo string para retornar un array con las coincidencias del query
+  searchGifs(query: string) {
+    // instancia un observable
+    this.http
+      .get<GiphyResponse>(`${environment.giphyUrl}/gifs/search`, {
+        params: {
+          api_key: environment.giphyApikey,
+          q: query,
+          limit: 20,
+        },
+      })
+      // subscribe disparador y receptor muy importante
+      .subscribe((response) => {
+        const gifs = GifMapper.mapearGiphyItemToGifArray(response.data);
+        console.log({ search: gifs }); // solo imprime en la consola para verificar
+      });
+  }
 }
 
 // el atajo a-service para generar este codigo sale gracias
