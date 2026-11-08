@@ -71,6 +71,11 @@ export class GifService {
         )
     );
   }
+
+  //obtiene el historial de gifs deacuerdo a la query 
+  getHistoryGifs(query: string): Gif[] {
+    return this.searchHistory()[query] ?? [];
+  }
 }
 
 // el atajo a-service para generar este codigo sale gracias
