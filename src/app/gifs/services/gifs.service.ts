@@ -1,10 +1,10 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import type { GiphyResponse } from '../interfaces/giphy.interfaces';
 import { Gif } from '../interfaces/gif.interface';
 import { GifMapper } from '../mapper/gif.mapper';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' }) // crea una instancia unica (singleton) en memoria global
 export class GifService {
@@ -15,6 +15,9 @@ export class GifService {
 
   // señal que nos dice si los gifs estan cargando
   trendingsGifsloading = signal(true);
+
+  searchHistory = signal<Record<string, Gif[]>>({}); // el historial de lo que buscamos
+  searchHistoryKeys = computed(() => Object.keys(this.searchHistory())); // obtiene en una señal conputada las keys del historial anterior
 
   constructor() {
     // dispara el metodo en el hilo principal al inicializar
@@ -55,6 +58,16 @@ export class GifService {
         .pipe(
           map(({ data }) => data), // extrae data
           map((items) => GifMapper.mapearGiphyItemToGifArray(items)), // transforma los gifs a un array
+
+          //historial
+          // tap permite ejecutar una accion adicional (efecto secundario)
+          // sin modificar los datos que siguen circulando por el Observable
+          tap((items) => {
+            this.searchHistory.update((history) => ({ // se actualiza la señal conputada
+              ...history,
+              [query.toLocaleLowerCase()]: items, // { goku: [gifs de goku]}
+            }));
+          }),
         )
     );
   }

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { GifService } from '../../services/gifs.service';
 
 interface MenuOptions {
   icon: string;
@@ -14,6 +15,10 @@ interface MenuOptions {
   templateUrl: './side-menu-options.component.html',
 })
 export class SideMenuOptionsComponent {
+
+  //inyectamos el servicio para hacer uso de su señal computada que contiene los keys
+  gifService = inject(GifService);
+
   //array de menuOptions de tipo MenuOptions
   menuOptions: MenuOptions[] = [
     {
