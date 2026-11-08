@@ -2,7 +2,8 @@
   <!-- puede ser item o cualquier otro nombre gifs es el input por donde recibimos la lista de gifs() -->
   @for (item of gifs(); track item) {
     <!-- enviamos a imageUrl los item -->
-    <gif-list-item [imageUrl]="item" />
+    <!-- ahora el item tiene que acceder a la propiedad url -->
+    <gif-list-item [imageUrl]="item.url" />
   }
 </div>
 

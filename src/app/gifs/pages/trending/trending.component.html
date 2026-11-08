@@ -1,3 +1,4 @@
 <section class="">
-  <gif-list [gifs]="gifs()" />
+  <!-- se accede mediante el servicio al array de trendingGifs -->
+  <gif-list [gifs]="gifService.trendingGifs()" />
 </section>

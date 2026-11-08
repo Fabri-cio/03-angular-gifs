@@ -12,6 +12,9 @@ export class GifService {
   // propiedade que le da el espacio para almacenar es estado de nuestros trendingGifs
   trendingGifs = signal<Gif[]>([]);
 
+  // señal que nos dice si los gifs estan cargando
+  trendingsGifsloading = signal(true);
+
   constructor() {
     // dispara el metodo en el hilo principal al inicializar
     this.cargarTrendingGifs();
@@ -30,6 +33,7 @@ export class GifService {
       .subscribe((response) => {
         const gifs = GifMapper.mapearGiphyItemToGifArray(response.data);
         this.trendingGifs.set(gifs); // establecer en los gifs el array de gifs
+        this.trendingsGifsloading.set(false); // establecemos en false la señal cuando los trendings se hallan cargado
         console.log(gifs);
       });
   }
