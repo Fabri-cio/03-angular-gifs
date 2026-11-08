@@ -18,5 +18,6 @@
 <!-- seccion del resultado de las busquedas del search -->
 <section class="">
   <!-- se accede mediante el servicio al array de trendingGifs -->
-  <gif-list [gifs]="[]" />
+  <!-- ahora se usa la señal gifs() que contiene el array de los gifs -->
+  <gif-list [gifs]="gifs()" />
 </section>

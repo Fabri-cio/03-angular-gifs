@@ -4,6 +4,7 @@ import { environment } from '@environments/environment';
 import type { GiphyResponse } from '../interfaces/giphy.interfaces';
 import { Gif } from '../interfaces/gif.interface';
 import { GifMapper } from '../mapper/gif.mapper';
+import { map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' }) // crea una instancia unica (singleton) en memoria global
 export class GifService {
@@ -41,19 +42,21 @@ export class GifService {
   // metodo que recibe un parametro query de tipo string para retornar un array con las coincidencias del query
   searchGifs(query: string) {
     // instancia un observable
-    this.http
-      .get<GiphyResponse>(`${environment.giphyUrl}/gifs/search`, {
-        params: {
-          api_key: environment.giphyApikey,
-          q: query,
-          limit: 20,
-        },
-      })
-      // subscribe disparador y receptor muy importante
-      .subscribe((response) => {
-        const gifs = GifMapper.mapearGiphyItemToGifArray(response.data);
-        console.log({ search: gifs }); // solo imprime en la consola para verificar
-      });
+    return (
+      this.http
+        .get<GiphyResponse>(`${environment.giphyUrl}/gifs/search`, {
+          params: {
+            api_key: environment.giphyApikey,
+            q: query,
+            limit: 20,
+          },
+        })
+        // pipe permite aplicar operaciones a este operador como los dos maps
+        .pipe(
+          map(({ data }) => data), // extrae data
+          map((items) => GifMapper.mapearGiphyItemToGifArray(items)), // transforma los gifs a un array
+        )
+    );
   }
 }
 
