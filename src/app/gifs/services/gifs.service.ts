@@ -1,10 +1,21 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import type { GiphyResponse } from '../interfaces/giphy.interfaces';
 import { Gif } from '../interfaces/gif.interface';
 import { GifMapper } from '../mapper/gif.mapper';
 import { map, tap } from 'rxjs';
+
+// constante para evitar errores
+const GIF_KEY = 'gifs'
+
+// funcion que carga desde localStorage
+const cargarDesdeLocalStorage = () =>{
+  const gifsFromLocalStorage = localStorage.getItem(GIF_KEY) ?? '{}';
+  const gifs = JSON.parse(gifsFromLocalStorage)
+  console.log(gifs)
+  return gifs;
+}
 
 @Injectable({ providedIn: 'root' }) // crea una instancia unica (singleton) en memoria global
 export class GifService {
@@ -16,13 +27,20 @@ export class GifService {
   // señal que nos dice si los gifs estan cargando
   trendingsGifsloading = signal(true);
 
-  searchHistory = signal<Record<string, Gif[]>>({}); // el historial de lo que buscamos
+  // en vez de {} que estaba vacio ahora inicia con los valores del localStorage
+  searchHistory = signal<Record<string, Gif[]>>(cargarDesdeLocalStorage()); // el historial de lo que buscamos
   searchHistoryKeys = computed(() => Object.keys(this.searchHistory())); // obtiene en una señal conputada las keys del historial anterior
 
   constructor() {
     // dispara el metodo en el hilo principal al inicializar
     this.cargarTrendingGifs();
   }
+
+  // efecto que guarda el historial en el localStorage un array de gifs u objeto {}
+  guardarEnLocalStorage = effect(() =>{
+    const historyString = JSON.stringify(this.searchHistory())
+    localStorage.setItem(GIF_KEY, historyString)
+  })
 
   cargarTrendingGifs() {
     // instancia un observable
